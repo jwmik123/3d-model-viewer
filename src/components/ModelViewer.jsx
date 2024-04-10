@@ -15,12 +15,12 @@ const Model = ({ fileUrl }) => {
   const textureUrl = "/bakedFinal.jpg";
   const texture = useLoader(TextureLoader, textureUrl);
   texture.flipY = true;
-  glb.scene.traverse((child) => {
-    if (child.isMesh) {
-      child.material.map = texture;
-      child.material.needsUpdate = true;
-    }
-  });
+  //   glb.scene.traverse((child) => {
+  //     if (child.isMesh) {
+  //       child.material.map = texture;
+  //       child.material.needsUpdate = true;
+  //     }
+  //   });
 
   return <primitive object={glb.scene} scale={0.5} position={[0, 0, 0]} />;
 };
