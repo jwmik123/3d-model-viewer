@@ -17,10 +17,7 @@ This 3D Model Viewer is a web application built with React and Three.js, utilizi
 
 ### Installation
 
-1. Clone the repository to your local machine:
-   ```sh
-   git clone https://your-repository-url-here.git
-   ```
+1. Clone the repository to your local machine
 2. Navigate to the project directory:
    ```sh
    cd 3d-model-viewer
