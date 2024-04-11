@@ -5,6 +5,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { TextureLoader } from "three";
 import { Center, Grid, OrbitControls } from "@react-three/drei";
+
 import Loader from "./Loader";
 
 const Model = ({ fileUrl, textureUrl }) => {
@@ -87,8 +88,6 @@ const ModelViewer = ({ base64Model, base64Texture }) => {
     return new Blob([uInt8Array], { type: contentType });
   };
 
-  // Create a Blob URL if a base64Model is provided &
-  // Create a Blob URL if a base64Texture is provided
   let fileUrl, textureUrl;
   if (base64Model) {
     const blob = convertBase64ToBlob(base64Model);
@@ -104,14 +103,12 @@ const ModelViewer = ({ base64Model, base64Texture }) => {
       <Suspense fallback={<Loader />}>
         <Canvas className="block w-full h-full">
           <ambientLight intensity={0.5} />
-          <pointLight position={[10, 10, 10]} />
-
+          <pointLight position={[5, 5, 5]} />
           <Center>
             {fileUrl && <Model fileUrl={fileUrl} textureUrl={textureUrl} />}
           </Center>
-
-          <Grid args={[20, 20]} position={[0, -2, 0]} />
-          <OrbitControls maxPolarAngle={Math.PI / 2} />
+          <Grid args={[20, 20]} position={[0, -1.5, 0]} infiniteGrid />
+          <OrbitControls />
         </Canvas>
       </Suspense>
     </div>
