@@ -5,6 +5,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { TextureLoader } from "three";
 import { Center, Grid, OrbitControls } from "@react-three/drei";
+import Loader from "./Loader";
 
 const Model = ({ fileUrl }) => {
   const dracoLoader = new DRACOLoader();
@@ -82,15 +83,17 @@ const ModelViewer = ({ base64Model }) => {
 
   return (
     <div className="min-h-screen cursor-grab hero bg-base-200">
-      <Canvas className="block w-full h-full">
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} />
-        <Suspense fallback={null}>
+      <Suspense fallback={<Loader />}>
+        <Canvas className="block w-full h-full">
+          <ambientLight intensity={0.5} />
+          <pointLight position={[10, 10, 10]} />
+
           <Center>{fileUrl && <Model fileUrl={fileUrl} />}</Center>
-        </Suspense>
-        <Grid args={[20, 20]} position={[0, -2, 0]} cellColor={0x333333} />
-        <OrbitControls maxPolarAngle={Math.PI / 2} />
-      </Canvas>
+
+          <Grid args={[20, 20]} position={[0, -2, 0]} cellColor={0x333333} />
+          <OrbitControls maxPolarAngle={Math.PI / 2} />
+        </Canvas>
+      </Suspense>
     </div>
   );
 };

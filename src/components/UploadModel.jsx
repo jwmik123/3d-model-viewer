@@ -14,7 +14,7 @@ const UploadModel = () => {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-screen gap-10">
       <div className="shadow-xl card w-96 bg-base-100">
         <div className="card-body">
           <h2 className="card-title">Upload a 3D model in .GLB format.</h2>
@@ -32,7 +32,6 @@ const UploadModel = () => {
           </div>
         </div>
       </div>
-
       <div className="shadow-xl card w-96 bg-base-100">
         <div className="card-body">
           <h2 className="card-title">Upload your bake</h2>
@@ -45,6 +44,14 @@ const UploadModel = () => {
               accept=".glb"
             />
           </div>
+        </div>
+      </div>
+      <div className="shadow-xl card w-96 bg-base-100">
+        <div className="card-body">
+          <p>
+            This tool is made to view and test your baked images on your
+            objects.
+          </p>
         </div>
       </div>
     </div>
