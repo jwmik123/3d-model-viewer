@@ -38,12 +38,16 @@ function App() {
           onModelUpload={handleModelUpload}
           onTextureUpload={handleTextureUpload}
         />
-        {file && (
+        {file ? (
           <ModelViewer
             key={file + texture}
             base64Model={file}
             base64Texture={texture}
           />
+        ) : (
+          <div className="min-h-screen cursor-grab hero bg-base-200">
+            <h1 className="text-2xl">Please upload a 3D model</h1>
+          </div>
         )}
       </div>
     </>

@@ -50,8 +50,8 @@ const Model = ({ fileUrl, textureUrl }) => {
               }
             `,
         });
+        updateMaterial();
       });
-      updateMaterial();
     }
   }, [textureUrl]);
 
