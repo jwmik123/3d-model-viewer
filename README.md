@@ -1,61 +1,65 @@
-# 3D Model Viewer
+# 3D Model Viewer Project
 
-This 3D Model Viewer is a web application built with React and Three.js, utilizing react-three-fiber for integration. It allows users to upload .glb files (with support for DRACO compression) to view 3D models interactively. The viewer includes basic lighting and grid floor setup for a better viewing experience.
+## Description
+
+This project is a React application that enables users to view 3D models in the browser. It uses `three.js` and `@react-three/fiber` for rendering 3D content. Users can upload 3D models and textures, which are then displayed in an interactive viewer with orbit controls for easy manipulation. The application supports `.glb` and `.gltf` formats for models and `.jpg`, `.png`, `.webp` for textures.
 
 ## Features
 
-- Upload and view .glb format 3D models
-- Supports DRACO-compressed and non-DRACO models
-- Interactive viewing with zoom, pan, and rotate functionalities
-- Grid floor for reference and scale
+- Upload 3D models and textures via a simple, user-friendly interface.
+- View uploaded 3D models in an interactive environment with orbit controls.
+- Dynamically apply textures to models.
+- Efficient loading and rendering of 3D models using DRACO compression.
 
-## Getting Started
+## Installation
 
-### Prerequisites
+1. Clone the repository:
 
-- Node.js installed on your system
+```
+git clone https://github.com/jwmik123/3d-model-viewer.git
+```
 
-### Installation
-
-1. Clone the repository to your local machine
 2. Navigate to the project directory:
-   ```sh
-   cd 3d-model-viewer
-   ```
-3. Install the required npm packages:
-   ```sh
-   npm install
-   ```
+
+```
+cd 3d-model-viewer
+```
+
+3. Install dependencies:
+
+```
+npm install
+```
+
 4. Start the development server:
-   ```sh
-   npm run dev
-   ```
-   Your default web browser should open automatically to `http://localhost:5173`.
+
+```
+npm run dev
+```
+
+The application will be available at `http://localhost:3000`.
 
 ## Usage
 
-1. **Uploading a Model**: Click the upload area or drag and drop your .glb file to view your 3D model.
-2. **Interacting with the Model**: Use your mouse to zoom, pan, and rotate the model.
+- **Uploading a Model and Texture:**
+  - Click on the upload areas to select and upload a 3D model and its texture.
+  - Supported model formats: `.glb`, `.gltf`
+  - Supported texture formats: `.jpg`, `.png`, `.webp`
+- **Viewing the Model:**
+  - Once uploaded, the model will be displayed in the viewer.
+  - Use the mouse to orbit, zoom, and pan around the model.
 
 ## Technologies Used
 
-- [React](https://reactjs.org/) - A JavaScript library for building user interfaces
-- [Three.js](https://threejs.org/) - A cross-browser JavaScript library and API used to create and display animated 3D computer graphics in a web browser
-- [react-three-fiber](https://github.com/pmndrs/react-three-fiber) - A React renderer for Three.js
-- [@react-three/drei](https://github.com/pmndrs/drei) - Useful helpers for react-three-fiber
+- React
+- Three.js
+- @react-three/fiber
+- @react-three/drei
 
-## Contributing
+#### Contribution
 
-Contributions are welcome! Please feel free to submit a pull request.
+Contributions are welcome! If you have any improvements or feature suggestions, please open an issue or submit a pull request.
 
-## License
+#### License
 
-Distributed under the MIT License. See `LICENSE` for more information.
-
-## Acknowledgments
-
-- Special thanks to the Three.js and react-three-fiber communities for providing the tools and documentation to build this project.
-
----
-
-Remember, this is a basic template. Depending on your project's complexity and requirements, you might want to add sections such as **Code Examples**, **Project Structure**, **Deployment Instructions**, **Future Work**, and **Contact Information**.
+This project is open source and available under the [MIT License](LICENSE).
