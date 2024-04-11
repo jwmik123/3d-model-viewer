@@ -1,6 +1,6 @@
 import React from "react";
 
-const UploadModel = ({ onFileUpload }) => {
+const UploadModel = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -15,17 +15,17 @@ const UploadModel = ({ onFileUpload }) => {
 
   return (
     <div className="flex flex-col">
-      <div className="card w-96 bg-base-100 shadow-xl">
+      <div className="shadow-xl card w-96 bg-base-100">
         <div className="card-body">
           <h2 className="card-title">Upload a 3D model in .GLB format.</h2>
           <p className="text-slate-400">We only allow .glb files for now</p>
           <p className="text-red-500">
             Refresh the page after uploading a new file!
           </p>
-          <div className="card-actions justify-end">
+          <div className="justify-end card-actions">
             <input
               type="file"
-              className="file-input w-full max-w-xs"
+              className="w-full max-w-xs file-input"
               onChange={handleFileChange}
               accept=".glb"
             />
@@ -33,14 +33,14 @@ const UploadModel = ({ onFileUpload }) => {
         </div>
       </div>
 
-      <div className="card w-96 bg-base-100 shadow-xl">
+      <div className="shadow-xl card w-96 bg-base-100">
         <div className="card-body">
           <h2 className="card-title">Upload your bake</h2>
           <p>We support .jpg / .png / .webg</p>
-          <div className="card-actions justify-end">
+          <div className="justify-end card-actions">
             <input
               type="file"
-              className="file-input w-full max-w-xs"
+              className="w-full max-w-xs file-input"
               onChange={handleFileChange}
               accept=".glb"
             />

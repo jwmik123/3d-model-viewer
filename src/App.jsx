@@ -21,9 +21,6 @@ function App() {
 
   return (
     <>
-      <div className="navbar bg-neutral text-neutral-content">
-        <button className="btn btn-ghost text-xl">3D Model Viewer</button>
-      </div>
       <div className="flex">
         <UploadModel onFileUpload={handleFileUpload} />
         {file && <ModelViewer base64Model={file} />}

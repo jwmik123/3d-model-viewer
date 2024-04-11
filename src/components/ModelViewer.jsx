@@ -1,9 +1,10 @@
-import React, { Suspense, useEffect } from "react";
-import { Canvas, useLoader, extend } from "@react-three/fiber";
+import * as THREE from "three";
+import React, { Suspense, useEffect, useRef } from "react";
+import { Canvas, useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
-import { TextureLoader } from "three/src/loaders/TextureLoader";
-import { Grid, OrbitControls } from "@react-three/drei";
+import { TextureLoader } from "three";
+import { Center, Grid, OrbitControls } from "@react-three/drei";
 
 const Model = ({ fileUrl }) => {
   const dracoLoader = new DRACOLoader();
@@ -12,15 +13,46 @@ const Model = ({ fileUrl }) => {
   const glb = useLoader(GLTFLoader, fileUrl, (loader) => {
     loader.setDRACOLoader(dracoLoader);
   });
-  const textureUrl = "/bakedFinal.jpg";
-  const texture = useLoader(TextureLoader, textureUrl);
-  texture.flipY = true;
-  //   glb.scene.traverse((child) => {
-  //     if (child.isMesh) {
-  //       child.material.map = texture;
-  //       child.material.needsUpdate = true;
-  //     }
-  //   });
+
+  const texture = useLoader(TextureLoader, "/bakedFinal.jpg");
+  texture.flipY = false;
+  texture.colorSpace = THREE.SRGBColorSpace;
+  const bakedMaterial = useRef(
+    new THREE.ShaderMaterial({
+      uniforms: {
+        uBakedDayTexture: new THREE.Uniform(texture),
+      },
+      vertexShader: `
+      varying vec2 vUv;
+      void main()
+      {
+          vec4 modelPosition = modelMatrix * vec4(position, 1.0);
+          vec4 viewPosition = viewMatrix * modelPosition;
+          vec4 projectionPosition = projectionMatrix * viewPosition;
+          gl_Position = projectionPosition;
+
+          vUv = uv;
+      }
+    `,
+      fragmentShader: `
+      uniform sampler2D uBakedDayTexture;
+      varying vec2 vUv;
+      void main()
+      {
+          vec3 bakedDayColor = texture2D(uBakedDayTexture, vUv).rgb;
+          gl_FragColor = vec4(bakedDayColor, 1.0);
+      }
+    `,
+    })
+  );
+
+  useEffect(() => {
+    glb.scene.traverse((child) => {
+      if (child.isMesh) {
+        child.material = bakedMaterial.current;
+      }
+    });
+  }, [glb.scene]);
 
   return <primitive object={glb.scene} scale={0.5} position={[0, 0, 0]} />;
 };
@@ -49,15 +81,14 @@ const ModelViewer = ({ base64Model }) => {
   }
 
   return (
-    <div className="hero min-h-screen bg-base-200">
-      <Canvas className="w-full h-full block">
+    <div className="min-h-screen cursor-grab hero bg-base-200">
+      <Canvas className="block w-full h-full">
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} />
         <Suspense fallback={null}>
-          {console.log(fileUrl)}
-          {fileUrl && <Model fileUrl={fileUrl} />}
+          <Center>{fileUrl && <Model fileUrl={fileUrl} />}</Center>
         </Suspense>
-        <Grid args={[20, 20]} position={[0, -1, 0]} cellColor={0x333333} />
+        <Grid args={[20, 20]} position={[0, -2, 0]} cellColor={0x333333} />
         <OrbitControls maxPolarAngle={Math.PI / 2} />
       </Canvas>
     </div>
