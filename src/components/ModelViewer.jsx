@@ -7,7 +7,7 @@ import { TextureLoader } from "three";
 import { Center, Grid, OrbitControls } from "@react-three/drei";
 import Loader from "./Loader";
 
-const Model = ({ fileUrl }) => {
+const Model = ({ fileUrl, textureUrl }) => {
   const dracoLoader = new DRACOLoader();
   dracoLoader.setDecoderPath("/draco/gltf/");
 
@@ -15,51 +15,64 @@ const Model = ({ fileUrl }) => {
     loader.setDRACOLoader(dracoLoader);
   });
 
-  const texture = useLoader(TextureLoader, "/bakedFinal.jpg");
-  texture.flipY = false;
-  texture.colorSpace = THREE.SRGBColorSpace;
-  const bakedMaterial = useRef(
-    new THREE.ShaderMaterial({
-      uniforms: {
-        uBakedDayTexture: new THREE.Uniform(texture),
-      },
-      vertexShader: `
-      varying vec2 vUv;
-      void main()
-      {
-          vec4 modelPosition = modelMatrix * vec4(position, 1.0);
-          vec4 viewPosition = viewMatrix * modelPosition;
-          vec4 projectionPosition = projectionMatrix * viewPosition;
-          gl_Position = projectionPosition;
-
-          vUv = uv;
-      }
-    `,
-      fragmentShader: `
-      uniform sampler2D uBakedDayTexture;
-      varying vec2 vUv;
-      void main()
-      {
-          vec3 bakedDayColor = texture2D(uBakedDayTexture, vUv).rgb;
-          gl_FragColor = vec4(bakedDayColor, 1.0);
-      }
-    `,
-    })
-  );
+  const materialRef = useRef();
 
   useEffect(() => {
+    if (textureUrl) {
+      const textureLoader = new TextureLoader();
+      textureLoader.load(textureUrl, (texture) => {
+        texture.flipY = false;
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.needsUpdate = true;
+        materialRef.current = new THREE.ShaderMaterial({
+          uniforms: {
+            uBakedDayTexture: new THREE.Uniform(texture),
+          },
+          vertexShader: `
+              varying vec2 vUv;
+              void main()
+              {
+                  vec4 modelPosition = modelMatrix * vec4(position, 1.0);
+                  vec4 viewPosition = viewMatrix * modelPosition;
+                  vec4 projectionPosition = projectionMatrix * viewPosition;
+                  gl_Position = projectionPosition;
+          
+                  vUv = uv;
+              }
+            `,
+          fragmentShader: `
+              uniform sampler2D uBakedDayTexture;
+              varying vec2 vUv;
+              void main()
+              {
+                  vec3 bakedDayColor = texture2D(uBakedDayTexture, vUv).rgb;
+                  gl_FragColor = vec4(bakedDayColor, 1.0);
+              }
+            `,
+        });
+      });
+      updateMaterial();
+    }
+  }, [textureUrl]);
+
+  const updateMaterial = () => {
     glb.scene.traverse((child) => {
-      if (child.isMesh) {
-        child.material = bakedMaterial.current;
+      if (child.isMesh && materialRef.current) {
+        child.material = materialRef.current;
       }
     });
-  }, [glb.scene]);
+  };
+
+  useEffect(() => {
+    if (materialRef.current) {
+      updateMaterial();
+    }
+  }, [glb.scene, textureUrl]);
 
   return <primitive object={glb.scene} scale={0.5} position={[0, 0, 0]} />;
 };
 
-const ModelViewer = ({ base64Model }) => {
-  // Convert Base64 string to Blob
+const ModelViewer = ({ base64Model, base64Texture }) => {
   const convertBase64ToBlob = (base64) => {
     const parts = base64.split(";base64,");
     const contentType = parts[0].split(":")[1];
@@ -74,11 +87,16 @@ const ModelViewer = ({ base64Model }) => {
     return new Blob([uInt8Array], { type: contentType });
   };
 
-  // Create a Blob URL if a base64Model is provided
-  let fileUrl;
+  // Create a Blob URL if a base64Model is provided &
+  // Create a Blob URL if a base64Texture is provided
+  let fileUrl, textureUrl;
   if (base64Model) {
     const blob = convertBase64ToBlob(base64Model);
     fileUrl = URL.createObjectURL(blob);
+  }
+  if (base64Texture) {
+    const blob = convertBase64ToBlob(base64Texture);
+    textureUrl = URL.createObjectURL(blob);
   }
 
   return (
@@ -88,9 +106,11 @@ const ModelViewer = ({ base64Model }) => {
           <ambientLight intensity={0.5} />
           <pointLight position={[10, 10, 10]} />
 
-          <Center>{fileUrl && <Model fileUrl={fileUrl} />}</Center>
+          <Center>
+            {fileUrl && <Model fileUrl={fileUrl} textureUrl={textureUrl} />}
+          </Center>
 
-          <Grid args={[20, 20]} position={[0, -2, 0]} cellColor={0x333333} />
+          <Grid args={[20, 20]} position={[0, -2, 0]} />
           <OrbitControls maxPolarAngle={Math.PI / 2} />
         </Canvas>
       </Suspense>
