@@ -23,6 +23,7 @@ const UploadModel = () => {
       <div className="shadow-xl card w-96 bg-base-100">
         <div className="card-body">
           <h2 className="card-title">Upload a 3D model</h2>
+          <p>Supported .glb / .gltf</p>
           <div className="justify-end card-actions">
             <input
               type="file"
@@ -35,8 +36,8 @@ const UploadModel = () => {
       </div>
       <div className="shadow-xl card w-96 bg-base-100">
         <div className="card-body">
-          <h2 className="card-title">Upload your bake</h2>
-          <p>We support .jpg / .png / .webg</p>
+          <h2 className="card-title">Upload your Baked Texture</h2>
+          <p>Supported .jpg / .png / .webg</p>
           <div className="justify-end card-actions">
             <input
               type="file"
