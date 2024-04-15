@@ -26,6 +26,7 @@ const Model = ({ fileUrl, textureUrl }) => {
         texture.colorSpace = THREE.SRGBColorSpace;
         texture.needsUpdate = true;
         materialRef.current = new THREE.ShaderMaterial({
+          side: THREE.DoubleSide,
           uniforms: {
             uBakedDayTexture: new THREE.Uniform(texture),
           },
@@ -70,7 +71,16 @@ const Model = ({ fileUrl, textureUrl }) => {
     }
   }, [glb.scene, textureUrl]);
 
-  return <primitive object={glb.scene} scale={0.5} position={[0, 0, 0]} />;
+  console.log(glb.scene);
+
+  return (
+    <primitive
+      object={glb.scene}
+      scale={0.5}
+      position={[0, 0, 0]}
+      dispose={null}
+    />
+  );
 };
 
 const ModelViewer = ({ base64Model, base64Texture }) => {
