@@ -48,7 +48,8 @@ const Model = ({ fileUrl, textureUrl }) => {
               void main()
               {
                   vec3 bakedDayColor = texture2D(uBakedDayTexture, vUv).rgb;
-                  gl_FragColor = vec4(bakedDayColor, 1.0);
+                  vec3 multicolor = bakedDayColor * 2.0;
+                  gl_FragColor = vec4(multicolor, 1.0);
               }
             `,
         });
