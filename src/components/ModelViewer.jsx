@@ -45,11 +45,16 @@ const Model = ({ fileUrl, textureUrl }) => {
           fragmentShader: `
               uniform sampler2D uBakedDayTexture;
               varying vec2 vUv;
+              #pragma glslify: blend = require(glsl-blend/lighten)
+
               void main()
               {
-                  vec3 bakedDayColor = texture2D(uBakedDayTexture, vUv).rgb;
-                  vec3 multicolor = bakedDayColor * 2.0;
-                  gl_FragColor = vec4(multicolor, 1.0);
+                vec3 bakedDayColor = texture2D(uBakedDayTexture, vUv).rgb;
+                vec3 lighterColor = bakedDayColor * 2.;
+
+                gl_FragColor = vec4(lighterColor, 1.0);
+
+                #include <tonemapping_fragment>
               }
             `,
         });
@@ -112,7 +117,13 @@ const ModelViewer = ({ base64Model, base64Texture }) => {
   return (
     <div className="min-h-screen cursor-grab hero bg-base-200">
       <Suspense fallback={<Loader />}>
-        <Canvas className="block w-full h-full">
+        <Canvas
+          className="block w-full h-full"
+          gl={{
+            antialias: true,
+            depth: true,
+          }}
+        >
           <ambientLight intensity={0.5} />
           <pointLight position={[5, 5, 5]} />
           <Center>
